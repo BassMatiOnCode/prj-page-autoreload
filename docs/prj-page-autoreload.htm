@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" version="2023-12-17" editor="USP" />
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2024-03-20" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2024-03-20" />
+<meta name="version" content="1" />
+<meta name="categories" content="Projects > Programming > HTML Page Auto-Reloader" />
+<meta name="tags" content="project, HTML, JavaScript, header, reload, page, changed, mtime, modification, date, time, 304, if-none-match, if-modified-since" />
+<meta name="description" content="This project is a development plug-in for web pages. It causes the browser to automatically reload a web page if the source file has changed." />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="all" />
+<link rel="stylesheet" href="/inc/page-2.css" />
+ 
+<title>Projects > Programming > HTML Page Auto–Reload</title>
+
+</head><body><header id="page-header"><object data="title.svg" type="image/svg+xml"></object></header><div id="main-toolbar"></div><main id="page-content">
+
+<h1>HTML Page Auto&ndash;Reload</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>Concept</h2><div>
+
+<p>A script on the page sends periodic GET requests to the server and compares the "last-modied" header of the current request with that of the first request. If the mtime changes, the browser is forced to reload the page.</p>  
+
+<p>Network traffic is kept low because browsers respond with a 304 status if the file has not been changed since the first request. Unfortunately, the browser cache serves the document with a 200 status code. Therefore we need to keep track of the mtime.</p>
+
+<!--h2--Concept--></div>
+
+<h2 cbc>Implemenation</h2><div>
+
+<p>An IFEE ensures that the global namespace is not polluted.</p>
+
+<figcaption class="listing">The code</figcaption>
+<pre>
+( function ( ) {
+	let mtime = "" ;
+	setInterval ( ( ) => { 
+		fetch ( window.location, { method : "HEAD" } )
+		.then ( response => {
+			const currentMtime = response.headers.get( "last-modified" );
+			if ( mtime === "" ) mtime = currentMtime ;
+			else if ( mtime !== currentMtime ) window.location.reload( );
+			} ) ;
+		} , 3000 ) ;
+	} ) ( ) ;</pre>
+
+<p>The script fetches the current document every 3 secconds, and compare the mtime with the saved mtime. If they differ, the page is reloaded.</p>
+
+<!--h2--Implemenation--></div>
+
+<h2 cbc>Activation and Deactivation</h2><div>
+
+<p>If the symbolic link <tt>\inc\page-autoreload\page-autoreload.js</tt> points to <tt>page-autoreload-1.js</tt>, the reloader is activated. If the link points to the empty file <tt>\inc\page-autoreload\page-autoreload.off</tt>, the auto-reloader is deactivated.</p>
+
+<p>If you ensure that the active script files cannot be deployed to the server, all production web pages will not be affected by the autoreloader.</p>
+
+<!--h2--Activation and Deactivation--></div>
+
+<h2 cbc>Improvements</h2><div>
+
+<p>The reloader only works for the main html document. Scripts and CSS files are not observed.</p>
+
+<p>An extension could find all external resources and monitor their mtimes. The script might then watch them all.</p>
+
+<p>Alternatively, the <tt>new URL(import.meta.url).searchParams.get("someURLInfo");</tt> could take a list of filenames to watch to reduce unnecessary network traffic.</p>
+
+<!--h2--Improvements--></div>
+
+</main><footer id="page-footer"></footer>
+<script type="module" src="/inc/page.js" ></script>
+<script type="module" src="/inc/page-autoreload/page-autoreload.js" ></script>
+</body></html>
