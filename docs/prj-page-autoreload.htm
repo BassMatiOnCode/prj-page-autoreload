@@ -6,7 +6,7 @@
 <meta name="author" content="USP" />
 <meta name="creation-date" content="2024-03-20" />
 <meta name="editor" content="USP" />
-<meta name="change-date" content="2024-03-20" />
+<meta name="change-date" content="2024-03-23" />
 <meta name="version" content="1" />
 <meta name="categories" content="Projects > Programming > HTML Page Auto-Reloader" />
 <meta name="tags" content="project, HTML, JavaScript, header, reload, page, changed, mtime, modification, date, time, 304, if-none-match, if-modified-since" />
@@ -25,12 +25,14 @@
 
 <h2 cbc>Usage</h2><div>
 
-<p>1. Download the file ".../code/page-autoreload-1.js" to a suitable project folder, for example to "/inc/page-autoreload/page-autoreload-1.js".</p>
+<p>1. Download the file <tt>.../code/page-autoreload-2.js</tt> to a suitable project folder, for example to <tt>/inc/page-autoreload/page-autoreload-2.js</tt>.</p>
+
+<p>To monitor SVG files in the browser, use <tt>.../code/page-autoreload-nonmodule-1.js</tt> instead.</p>
 
 <p>2. Place a script element in the HTML file(s) you are working on:</p>
 
 <pre><hi>&lt;script</hi> type="module" 
-src="/inc/page-autoreload/page-autoreload-1.js"&gt;
+src="/inc/page-autoreload/page-autoreload-2.js"&gt;
 <hi>&lt;/script&gt;</hi></pre>
 
 <p>By default, the script monitors the current document in the browser.</p>
@@ -39,7 +41,7 @@ src="/inc/page-autoreload/page-autoreload-1.js"&gt;
 
 <p>4. In a production environment, replace "/inc/page-autoreload/page-autoreload-1.js" with an empty file. This ensures that the script is not running accidently and causing unnecessary server load. The empty file also avoids "file not found" errors on the client side.</p>
 
-<p>5. If you want to monitor additional files, add a watchlist to the script url:</p>
+<p>5. If you want to monitor additional files, add a watchlist parameter to the script url:</p>
 
 <pre>&lt;script type="module" 
 src="/inc/page-autoreload/page-autoreload-1.js<hi>?watch=document.htm, /inc/page.css, /inc/page.js"</hi>"&gt;
@@ -59,7 +61,7 @@ src="/inc/page-autoreload/page-autoreload-1.js<hi>?watch=document.htm, /inc/page
 
 <p>An IFEE ensures that the global namespace is not polluted:</p>
 
-<figcaption class="listing">The code (version 1.0)</figcaption>
+<figcaption class="listing">The non-module code (release 1)</figcaption>
 <pre>(function(){ &hellip; })();</pre>
 
 <p>The function body contains the implementation:</p>
@@ -83,7 +85,7 @@ setInterval( () => {
 
 <p>The following runs compare the current mtime with the saved mtime. If they differ, the page is reloaded.</p>
 
-<p>That's all.</p>
+<p>Works as JavaScript module as well as non-module script.</p>
 
 <!--h2--Implementation--></div>
 
@@ -95,14 +97,14 @@ setInterval( () => {
 
 <!--h2--Activation and Deactivation--></div>
 
-<h2 cbc>Version 2: Improvements </h2><div>
+<h2 cbc>Release 2: Adding a Watchlist</h2><div>
 
-<p>The version 1 reloader only works for the html document. Scripts and CSS files are not observed and thus don't cause the page to be reloaded. Version 2 adds a mechanism to get <em>parameters</em> from the HTML document to the script code in <tt>page-autoreload-2.js</tt>. The developer includes a slightly changed script element in the HTML page:</p>
+<p>The release 1 implementation only works for the html document. Scripts and CSS files are not observed and thus don't cause the page to be reloaded. Release 2 adds a mechanism to get <em>parameters</em> from the HTML document to the script code in <tt>page-autoreload-2.js</tt>. The developer includes a slightly changed script element in the HTML page:</p>
 
 <figcaption class="listing">Adding a watchlist</figcaption>
 <pre>
 &lt;script type="module" 
-src="/inc/page-autoreload/page-autoreload-1.js<hi>?watch=document.htm, /inc/page.css, /inc/page.js"</hi>&gt;
+src="/inc/page-autoreload/page-autoreload-2.js<hi>?watch=document.htm, /inc/page.css, /inc/page.js"</hi>&gt;
 &lt;/script&gt;
 </pre>
 
